@@ -8,7 +8,7 @@ import com.byjw.jungwoon.util.retrofit.scheme.SortedDocument
 import java.io.Serializable
 
 class SearchPresenter(
-    val model: SearchContract.Model,
+    private val model: SearchContract.Model,
     val view: SearchContract.View
 ) : SearchContract.Presenter, Serializable {
 
@@ -19,6 +19,7 @@ class SearchPresenter(
         addCombineList(combineList, model.getVideoResponseByKeyword(keyword)!!)
         combineList.sortByDescending { it.date }
 
+        view.clear()
         view.addSortedList(combineList)
     }
 

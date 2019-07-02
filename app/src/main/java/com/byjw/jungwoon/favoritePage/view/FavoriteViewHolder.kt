@@ -12,6 +12,8 @@ import com.byjw.jungwoon.util.retrofit.scheme.*
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.ImageDocument
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.VideoDocument
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.util.*
 
 class FavoriteViewHolder(itemView: View, val view: BaseContract.BaseView) : RecyclerView.ViewHolder(itemView) {
 
@@ -41,14 +43,14 @@ class FavoriteViewHolder(itemView: View, val view: BaseContract.BaseView) : Recy
     private fun bindImage(imageDocument: ImageDocument) {
         Picasso.get().load(imageDocument.thumbnail_url).into(thumbnail)
         title.text = imageDocument.display_sitename
-        updateTime.text = imageDocument.datetime
+        updateTime.text = convertISO8601ToDate(imageDocument.datetime)
         switchFavoriteImage(imageDocument)
     }
 
     private fun bindVideo(videoDocument: VideoDocument) {
         Picasso.get().load(videoDocument.thumbnail).into(thumbnail)
         title.text = videoDocument.title
-        updateTime.text = videoDocument.datetime
+        updateTime.text = convertISO8601ToDate(videoDocument.datetime)
         switchFavoriteImage(videoDocument)
     }
 
@@ -58,6 +60,12 @@ class FavoriteViewHolder(itemView: View, val view: BaseContract.BaseView) : Recy
         } else {
             favorite.setImageResource(R.drawable.ic_favorite_border)
         }
+    }
+
+    private fun convertISO8601ToDate(dateStr: String): String {
+        val formatISO8601 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.KOREAN)
+        val date = formatISO8601.parse(dateStr)
+        return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREAN).format(date)
     }
 
 }

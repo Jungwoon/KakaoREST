@@ -1,18 +1,22 @@
 package com.byjw.jungwoon.searchPage.view
 
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.byjw.jungwoon.util.otto.BusProvider
-import com.byjw.jungwoon.R
 import com.byjw.jungwoon.util.otto.event.BusEventAddToFavorite
 import com.byjw.jungwoon.util.otto.event.BusEventRemoveToFavorite
 import com.byjw.jungwoon.BaseContract
+import com.byjw.jungwoon.R
 import com.byjw.jungwoon.util.retrofit.scheme.*
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.ImageDocument
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.VideoDocument
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class SearchViewHolder(itemView: View, val view: BaseContract.BaseView) : RecyclerView.ViewHolder(itemView) {
 
@@ -45,15 +49,17 @@ class SearchViewHolder(itemView: View, val view: BaseContract.BaseView) : Recycl
     private fun bindImage(imageDocument: ImageDocument) {
         Picasso.get().load(imageDocument.thumbnail_url).into(thumbnail)
         title.text = imageDocument.display_sitename
-        updateTime.text = imageDocument.datetime
+        updateTime.text = convertISO8601ToDate(imageDocument.datetime)
         switchFavoriteImage(imageDocument)
     }
 
     private fun bindVideo(videoDocument: VideoDocument) {
         Picasso.get().load(videoDocument.thumbnail).into(thumbnail)
         title.text = videoDocument.title
-        updateTime.text = videoDocument.datetime
+        updateTime.text = convertISO8601ToDate(videoDocument.datetime)
         switchFavoriteImage(videoDocument)
+
+        Log.e("HI", "${videoDocument.datetime}")
     }
 
     private fun switchFavoriteImage(document: BaseContent.Document) {
@@ -62,6 +68,12 @@ class SearchViewHolder(itemView: View, val view: BaseContract.BaseView) : Recycl
         } else {
             favorite.setImageResource(R.drawable.ic_favorite_border)
         }
+    }
+
+    private fun convertISO8601ToDate(dateStr: String): String {
+        val formatISO8601 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.KOREAN)
+        val date = formatISO8601.parse(dateStr)
+        return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREAN).format(date)
     }
 
 }

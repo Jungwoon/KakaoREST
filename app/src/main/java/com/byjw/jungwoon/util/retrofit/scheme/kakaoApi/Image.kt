@@ -21,6 +21,6 @@ data class ImageDocument(
     val height: Int, // 이미지의 세로 크기
     val display_sitename: String, // 출처명
     val doc_url : String, // 문서 URL
-    val datetime: String, // ISO 8601. [YYYY]-[MM]-[DD]T[hh]:[mm]:[ss].000+[tz],
+    val datetime: String, // 이미지 등록일 ISO 8601. [YYYY]-[MM]-[DD]T[hh]:[mm]:[ss].000+[tz],
     override var favorite: Boolean = false
 ) : BaseContent.Document
