@@ -14,8 +14,8 @@ interface RetrofitService {
     fun requestSearchImage(
         @Query("query") keyword: String,
         @Query("sort") sort: String = "recency",
-        @Query("page") page: Int = 1,
-        @Query("size") size: Int = 80
+        @Query("page") page: Int,
+        @Query("size") size: Int = 10
     ): Call<Image>
 
     @Headers("Authorization: KakaoAK e2978f4fa4734c953c064731d5f8975f")
@@ -23,8 +23,8 @@ interface RetrofitService {
     fun requestSearchVideo(
         @Query("query") keyword: String,
         @Query("sort") sort: String = "recency",
-        @Query("page") page: Int = 1,
-        @Query("size") size: Int = 15
+        @Query("page") page: Int,
+        @Query("size") size: Int = 10
     ): Call<Video>
 
 }

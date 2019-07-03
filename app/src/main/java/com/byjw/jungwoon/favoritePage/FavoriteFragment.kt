@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.byjw.jungwoon.R
 import com.byjw.jungwoon.util.otto.BusProvider
 import com.byjw.jungwoon.util.otto.event.BusEventAddToFavorite
 import com.byjw.jungwoon.util.otto.event.BusEventRemoveToFavorite
@@ -15,6 +13,7 @@ import com.byjw.jungwoon.favoritePage.presenter.FavoritePresenter
 import com.byjw.jungwoon.favoritePage.view.FavoriteViewAdapter
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_favorite.view.*
+
 
 class FavoriteFragment : Fragment() {
 
@@ -29,7 +28,7 @@ class FavoriteFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_favorite, container, false)
+        val view = inflater.inflate(com.byjw.jungwoon.R.layout.fragment_favorite, container, false)
 
         val favoriteViewAdapter = FavoriteViewAdapter(fragmentView = view)
 

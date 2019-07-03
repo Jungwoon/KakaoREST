@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_search.view.*
 class SearchViewAdapter(val fragmentView: View)
     : RecyclerView.Adapter<SearchViewHolder>(), SearchContract.View {
 
-    private val contentsList = mutableListOf<BaseContent.Document>()
+    private val searchList = mutableListOf<BaseContent.Document>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         val layoutView = LayoutInflater.from(parent.context)
@@ -22,32 +22,32 @@ class SearchViewAdapter(val fragmentView: View)
         return SearchViewHolder(itemView = layoutView, view = this)
     }
 
-    override fun getItemCount() = contentsList.size
+    override fun getItemCount() = searchList.size
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
-        holder.onBind(contentsList[position])
+        holder.onBind(searchList[position])
     }
 
     override fun addContents(document: BaseContent.Document) {
-        contentsList.add(document)
+        searchList.add(document)
         update()
     }
 
     override fun removeContents(document: BaseContent.Document) {
-        contentsList.remove(document)
+        searchList.remove(document)
         update()
     }
 
     override fun addSortedList(sortedDocuments: List<SortedDocument>) {
         for (sortedDocument in sortedDocuments) {
-            contentsList.add(sortedDocument.document)
+            searchList.add(sortedDocument.document)
         }
 
         update()
     }
 
     override fun clear() {
-        contentsList.clear()
+        searchList.clear()
     }
 
     override fun unlike(document: BaseContent.Document) {
@@ -60,7 +60,7 @@ class SearchViewAdapter(val fragmentView: View)
 
         val emptyLayout = fragmentView.search_layout_empty
 
-        if (contentsList.isEmpty()) {
+        if (searchList.isEmpty()) {
             emptyLayout.visibility = View.VISIBLE
         } else {
             emptyLayout.visibility = View.GONE

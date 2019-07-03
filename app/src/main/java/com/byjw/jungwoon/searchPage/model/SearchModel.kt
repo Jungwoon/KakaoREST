@@ -8,8 +8,8 @@ import java.util.concurrent.Executors
 
 class SearchModel : SearchContract.Model {
 
-    override fun getImageResponseByKeyword(keyword: String): List<BaseContent.Document>? {
-        val requestSearchImage = SearchRetrofit.getService().requestSearchImage(keyword)
+    override fun getImageResponseByKeyword(keyword: String, page: Int): List<BaseContent.Document>? {
+        val requestSearchImage = SearchRetrofit.getService().requestSearchImage(keyword = keyword, page = page)
 
         val executor = Executors.newFixedThreadPool(4)
 
@@ -18,8 +18,8 @@ class SearchModel : SearchContract.Model {
         })).get()
     }
 
-    override fun getVideoResponseByKeyword(keyword: String): List<BaseContent.Document>? {
-        val requestSearchVideo = SearchRetrofit.getService().requestSearchVideo(keyword)
+    override fun getVideoResponseByKeyword(keyword: String, page: Int): List<BaseContent.Document>? {
+        val requestSearchVideo = SearchRetrofit.getService().requestSearchVideo(keyword = keyword, page = page)
 
         val executor = Executors.newFixedThreadPool(4)
 

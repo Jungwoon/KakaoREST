@@ -58,8 +58,6 @@ class SearchViewHolder(itemView: View, val view: BaseContract.BaseView) : Recycl
         title.text = videoDocument.title
         updateTime.text = convertISO8601ToDate(videoDocument.datetime)
         switchFavoriteImage(videoDocument)
-
-        Log.e("HI", "${videoDocument.datetime}")
     }
 
     private fun switchFavoriteImage(document: BaseContent.Document) {

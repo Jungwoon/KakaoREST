@@ -1,7 +1,5 @@
 package com.byjw.jungwoon.searchPage.presenter
 
-import android.view.View
-import android.widget.LinearLayout
 import com.byjw.jungwoon.util.retrofit.scheme.BaseContent
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.ImageDocument
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.VideoDocument
@@ -14,14 +12,13 @@ class SearchPresenter(
     val view: SearchContract.View
 ) : SearchContract.Presenter, Serializable {
 
-    override fun addSearchResponseByKeyword(keyword: String) {
+    override fun addSearchResponseByKeyword(keyword: String, page: Int) {
         val combineList = mutableListOf<SortedDocument>()
 
-        addCombineList(combineList, model.getImageResponseByKeyword(keyword)!!)
-        addCombineList(combineList, model.getVideoResponseByKeyword(keyword)!!)
+        addCombineList(combineList, model.getImageResponseByKeyword(keyword, page)!!)
+        addCombineList(combineList, model.getVideoResponseByKeyword(keyword, page)!!)
         combineList.sortByDescending { it.date }
 
-        view.clear()
         view.addSortedList(combineList)
     }
 
@@ -48,6 +45,10 @@ class SearchPresenter(
         }
 
         return combineList
+    }
+
+    override fun clear() {
+        view.clear()
     }
 
     override fun unlike(document: BaseContent.Document) {

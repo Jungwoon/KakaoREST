@@ -1,8 +1,6 @@
 package com.byjw.jungwoon.searchPage
 
-import android.widget.LinearLayout
 import com.byjw.jungwoon.BaseContract
-import com.byjw.jungwoon.favoritePage.FavoriteContract
 import com.byjw.jungwoon.util.retrofit.scheme.BaseContent
 import com.byjw.jungwoon.util.retrofit.scheme.SortedDocument
 
@@ -10,9 +8,9 @@ interface SearchContract {
 
     interface Model {
 
-        fun getImageResponseByKeyword(keyword: String): List<BaseContent.Document>?
+        fun getImageResponseByKeyword(keyword: String, page: Int): List<BaseContent.Document>?
 
-        fun getVideoResponseByKeyword(keyword: String): List<BaseContent.Document>?
+        fun getVideoResponseByKeyword(keyword: String, page: Int): List<BaseContent.Document>?
 
     }
 
@@ -32,7 +30,9 @@ interface SearchContract {
 
     interface Presenter : BaseContract.BasePresenter {
 
-        fun addSearchResponseByKeyword(keyword: String)
+        fun addSearchResponseByKeyword(keyword: String, page: Int = 1)
+
+        fun clear()
 
         fun unlike(document: BaseContent.Document)
 
