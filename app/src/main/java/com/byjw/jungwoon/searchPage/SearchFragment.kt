@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 
@@ -19,7 +20,8 @@ import kotlinx.android.synthetic.main.fragment_search.view.*
 
 class SearchFragment : Fragment() {
 
-    lateinit var searchPresenter: SearchPresenter
+    private lateinit var searchPresenter: SearchPresenter
+    lateinit var emptyLayout: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +34,10 @@ class SearchFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
+        emptyLayout = view.search_layout_empty
+
         val searchModel = SearchModel()
-        val searchViewAdapter = SearchViewAdapter()
+        val searchViewAdapter = SearchViewAdapter(fragmentView = view)
 
         searchPresenter = SearchPresenter(searchModel, searchViewAdapter)
 
@@ -44,6 +48,11 @@ class SearchFragment : Fragment() {
         return view
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        BusProvider.unregister(this)
+    }
+
     @Subscribe
     fun searchBus(busEventSearchKeyword: BusEventSearchKeyword) {
         searchPresenter.addSearchResponseByKeyword(busEventSearchKeyword.keyword)
@@ -52,11 +61,6 @@ class SearchFragment : Fragment() {
     @Subscribe
     fun unlikeBus(busEventUnlikeToSearch: BusEventUnlikeToSearch) {
         searchPresenter.unlike(busEventUnlikeToSearch.document)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        BusProvider.unregister(this)
     }
 
 }

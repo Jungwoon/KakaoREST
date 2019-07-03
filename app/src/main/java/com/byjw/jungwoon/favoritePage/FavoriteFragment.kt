@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.byjw.jungwoon.R
@@ -29,7 +30,8 @@ class FavoriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_favorite, container, false)
-        val favoriteViewAdapter = FavoriteViewAdapter()
+
+        val favoriteViewAdapter = FavoriteViewAdapter(fragmentView = view)
 
         favoritePresenter = FavoritePresenter(favoriteViewAdapter)
 
@@ -40,19 +42,19 @@ class FavoriteFragment : Fragment() {
         return view
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        BusProvider.unregister(this)
+    }
+
     @Subscribe
-    fun add(busEventAddToFavorite: BusEventAddToFavorite) {
+    fun addBus(busEventAddToFavorite: BusEventAddToFavorite) {
         favoritePresenter.addContents(busEventAddToFavorite.document)
     }
 
     @Subscribe
-    fun remove(busEventRemoveToFavorite: BusEventRemoveToFavorite) {
+    fun removeBus(busEventRemoveToFavorite: BusEventRemoveToFavorite) {
         favoritePresenter.removeContents(busEventRemoveToFavorite.document)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        BusProvider.unregister(this)
     }
 
 }

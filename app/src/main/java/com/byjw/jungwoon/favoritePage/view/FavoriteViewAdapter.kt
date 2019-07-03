@@ -1,13 +1,16 @@
 package com.byjw.jungwoon.favoritePage.view
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.byjw.jungwoon.R
 import com.byjw.jungwoon.favoritePage.FavoriteContract
 import com.byjw.jungwoon.util.retrofit.scheme.BaseContent
+import kotlinx.android.synthetic.main.fragment_favorite.view.*
+import kotlinx.android.synthetic.main.fragment_search.view.*
 
-class FavoriteViewAdapter
+class FavoriteViewAdapter(val fragmentView: View)
     : RecyclerView.Adapter<FavoriteViewHolder>(),
     FavoriteContract.View {
 
@@ -28,17 +31,30 @@ class FavoriteViewAdapter
 
     override fun addContents(document: BaseContent.Document) {
         favoriteList.add(document)
-        notifyDataSetChanged()
+        update()
     }
 
     override fun removeContents(document: BaseContent.Document) {
         favoriteList.remove(document)
-        notifyDataSetChanged()
+        update()
     }
 
     override fun clear() {
         favoriteList.clear()
-        notifyDataSetChanged()
+        update()
     }
+
+    private fun update() {
+        notifyDataSetChanged()
+
+        val emptyLayout = fragmentView.favorite_layout_empty
+
+        if (favoriteList.isEmpty()) {
+            emptyLayout.visibility = View.VISIBLE
+        } else {
+            emptyLayout.visibility = View.GONE
+        }
+    }
+
 
 }

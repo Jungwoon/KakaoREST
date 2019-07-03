@@ -1,14 +1,16 @@
 package com.byjw.jungwoon.searchPage.view
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.byjw.jungwoon.R
 import com.byjw.jungwoon.util.retrofit.scheme.BaseContent
 import com.byjw.jungwoon.searchPage.SearchContract
 import com.byjw.jungwoon.util.retrofit.scheme.SortedDocument
+import kotlinx.android.synthetic.main.fragment_search.view.*
 
-class SearchViewAdapter
+class SearchViewAdapter(val fragmentView: View)
     : RecyclerView.Adapter<SearchViewHolder>(), SearchContract.View {
 
     private val contentsList = mutableListOf<BaseContent.Document>()
@@ -28,12 +30,12 @@ class SearchViewAdapter
 
     override fun addContents(document: BaseContent.Document) {
         contentsList.add(document)
-        notifyDataSetChanged()
+        update()
     }
 
     override fun removeContents(document: BaseContent.Document) {
         contentsList.remove(document)
-        notifyDataSetChanged()
+        update()
     }
 
     override fun addSortedList(sortedDocuments: List<SortedDocument>) {
@@ -41,7 +43,7 @@ class SearchViewAdapter
             contentsList.add(sortedDocument.document)
         }
 
-        notifyDataSetChanged()
+        update()
     }
 
     override fun clear() {
@@ -50,6 +52,19 @@ class SearchViewAdapter
 
     override fun unlike(document: BaseContent.Document) {
         document.favorite = false
-        notifyDataSetChanged()
+        update()
     }
+
+    private fun update() {
+        notifyDataSetChanged()
+
+        val emptyLayout = fragmentView.search_layout_empty
+
+        if (contentsList.isEmpty()) {
+            emptyLayout.visibility = View.VISIBLE
+        } else {
+            emptyLayout.visibility = View.GONE
+        }
+    }
+
 }

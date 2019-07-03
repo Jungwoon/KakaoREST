@@ -1,5 +1,7 @@
 package com.byjw.jungwoon.searchPage.presenter
 
+import android.view.View
+import android.widget.LinearLayout
 import com.byjw.jungwoon.util.retrofit.scheme.BaseContent
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.ImageDocument
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.VideoDocument
@@ -51,4 +53,5 @@ class SearchPresenter(
     override fun unlike(document: BaseContent.Document) {
         view.unlike(document)
     }
+
 }

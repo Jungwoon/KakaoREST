@@ -1,5 +1,6 @@
 package com.byjw.jungwoon.favoritePage
 
+import android.widget.LinearLayout
 import com.byjw.jungwoon.BaseContract
 import com.byjw.jungwoon.util.retrofit.scheme.BaseContent
 
@@ -12,6 +13,7 @@ interface FavoriteContract {
         override fun removeContents(document: BaseContent.Document)
 
         override fun clear()
+
     }
 
     interface Presenter : BaseContract.BasePresenter {

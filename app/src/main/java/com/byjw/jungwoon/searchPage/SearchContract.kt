@@ -1,6 +1,8 @@
 package com.byjw.jungwoon.searchPage
 
+import android.widget.LinearLayout
 import com.byjw.jungwoon.BaseContract
+import com.byjw.jungwoon.favoritePage.FavoriteContract
 import com.byjw.jungwoon.util.retrofit.scheme.BaseContent
 import com.byjw.jungwoon.util.retrofit.scheme.SortedDocument
 
