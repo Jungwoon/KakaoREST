@@ -26,6 +26,8 @@ interface SearchContract {
 
         fun unlike(document: BaseContent.Document)
 
+        fun toast(msg: String)
+
     }
 
     interface Presenter : BaseContract.BasePresenter {

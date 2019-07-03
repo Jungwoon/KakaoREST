@@ -3,6 +3,7 @@ package com.byjw.jungwoon.searchPage.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.byjw.jungwoon.R
 import com.byjw.jungwoon.util.retrofit.scheme.BaseContent
@@ -53,6 +54,10 @@ class SearchViewAdapter(val fragmentView: View)
     override fun unlike(document: BaseContent.Document) {
         document.favorite = false
         update()
+    }
+
+    override fun toast(msg: String) {
+        Toast.makeText(fragmentView.context, msg, Toast.LENGTH_LONG).show()
     }
 
     private fun update() {

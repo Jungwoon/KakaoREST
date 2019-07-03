@@ -1,5 +1,6 @@
 package com.byjw.jungwoon.searchPage.presenter
 
+import android.util.Log
 import com.byjw.jungwoon.util.retrofit.scheme.BaseContent
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.ImageDocument
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.VideoDocument
@@ -13,13 +14,23 @@ class SearchPresenter(
 ) : SearchContract.Presenter, Serializable {
 
     override fun addSearchResponseByKeyword(keyword: String, page: Int) {
-        val combineList = mutableListOf<SortedDocument>()
+        val imageResponse = model.getImageResponseByKeyword(keyword, page)
+        val videoResponse = model.getVideoResponseByKeyword(keyword, page)
 
-        addCombineList(combineList, model.getImageResponseByKeyword(keyword, page)!!)
-        addCombineList(combineList, model.getVideoResponseByKeyword(keyword, page)!!)
-        combineList.sortByDescending { it.date }
+        if (imageResponse == null || videoResponse == null) {
+            view.toast("네트워크에 문제가 발생하였습니다. 잠시 후 다시 시도해주시기 바랍니다.")
+        } else {
+            if (imageResponse.isEmpty() && videoResponse.isEmpty()) {
+                view.toast("검색하신 키워드에 대한 결과를 찾지 못하였습니다.")
+            } else {
+                val combineList = mutableListOf<SortedDocument>()
+                addCombineList(combineList, imageResponse)
+                addCombineList(combineList, videoResponse)
+                combineList.sortByDescending { it.date }
 
-        view.addSortedList(combineList)
+                view.addSortedList(combineList)
+            }
+        }
     }
 
     private fun addCombineList(
