@@ -27,12 +27,17 @@ class SearchFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        RxEventBus.subjectSearchKeyword.subscribe {
-            searchPresenter.clear()
-            searchPresenter.addSearchResponseByKeyword(keyword = it, page = 1)
-        }
+        searchPresenter.addDisposable(
+            RxEventBus.subjectSearchKeyword.subscribe {
+                searchPresenter.clear()
+                searchPresenter.addSearchResponseByKeyword(keyword = it, page = 1)
+            }
+        )
 
-        RxEventBus.subjectUnlikeSearch.subscribe(searchPresenter::unlike)
+        searchPresenter.addDisposable(
+            RxEventBus.subjectUnlikeSearch.subscribe(searchPresenter::unlike)
+        )
+
     }
 
     override fun onCreateView(
@@ -51,7 +56,7 @@ class SearchFragment : Fragment() {
         view.search_recycler_view.setHasFixedSize(true)
         view.search_recycler_view.layoutManager = LinearLayoutManager(context)
         view.search_recycler_view.adapter = searchViewAdapter
-        view.search_recycler_view.addOnScrollListener(object :  RecyclerView.OnScrollListener() {
+        view.search_recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
@@ -68,6 +73,12 @@ class SearchFragment : Fragment() {
         })
 
         return view
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        searchPresenter.dispose()
     }
 
 }

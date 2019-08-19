@@ -4,6 +4,8 @@ import com.byjw.jungwoon.BaseContract
 import com.byjw.jungwoon.util.retrofit.scheme.BaseContent
 import com.byjw.jungwoon.util.retrofit.scheme.SortedDocument
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 interface SearchContract {
 
@@ -33,11 +35,17 @@ interface SearchContract {
 
     interface Presenter : BaseContract.BasePresenter {
 
+        val compositeDisposable: CompositeDisposable
+
         fun addSearchResponseByKeyword(keyword: String, page: Int = 1)
 
         fun clear()
 
         fun unlike(document: BaseContent.Document)
+
+        fun addDisposable(disposable: Disposable)
+
+        fun dispose()
 
     }
 }

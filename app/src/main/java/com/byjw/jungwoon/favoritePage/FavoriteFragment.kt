@@ -19,8 +19,13 @@ class FavoriteFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        RxEventBus.subjectAddFavorite.subscribe(favoritePresenter::addContents)
-        RxEventBus.subjectRemoveFavorite.subscribe(favoritePresenter::removeContents)
+        favoritePresenter.addDisposable(
+            RxEventBus.subjectAddFavorite.subscribe(favoritePresenter::addContents)
+        )
+
+        favoritePresenter.addDisposable(
+            RxEventBus.subjectRemoveFavorite.subscribe(favoritePresenter::removeContents)
+        )
     }
 
     override fun onCreateView(
@@ -38,6 +43,12 @@ class FavoriteFragment : Fragment() {
         view.favorite_recycler_view.adapter = favoriteViewAdapter
 
         return view
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        favoritePresenter.dispose()
     }
 
 }

@@ -8,6 +8,8 @@ import com.byjw.jungwoon.searchPage.SearchContract
 import com.byjw.jungwoon.util.retrofit.scheme.SortedDocument
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import java.io.Serializable
@@ -17,16 +19,17 @@ class SearchPresenter(
     val view: SearchContract.View
 ) : SearchContract.Presenter, Serializable {
 
+    override val compositeDisposable = CompositeDisposable()
+
     override fun addSearchResponseByKeyword(keyword: String, page: Int) {
         val imageResponse = model.getImageResponseByKeyword(keyword, page)
         val videoResponse = model.getVideoResponseByKeyword(keyword, page)
 
-        Observable
-            .zip(
+        addDisposable(
+            Observable.zip(
                 imageResponse,
                 videoResponse,
-                BiFunction <List<BaseContent.Document>, List<BaseContent.Document>,
-                        MutableList<SortedDocument>> {image, video ->
+                BiFunction<List<BaseContent.Document>, List<BaseContent.Document>, MutableList<SortedDocument>> { image, video ->
 
                     val combineList = mutableListOf<SortedDocument>()
                     addCombineList(combineList = combineList, documentList = image)
@@ -37,12 +40,15 @@ class SearchPresenter(
                     return@BiFunction combineList
                 }
             )
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnError {
-                Log.e("JW_TEST", "Throwable : $it")
-            }
-            .subscribe(view::addSortedList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError { Log.e("JW_TEST", "error : $it") }
+                .subscribe(
+                    { result -> view.addSortedList(result) },
+                    { view.toast("서버 요청에 문제가 발생하였습니다.") }
+                )
+        )
+
     }
 
     private fun addCombineList(
@@ -51,7 +57,7 @@ class SearchPresenter(
     ): MutableList<SortedDocument> {
 
         for (document in documentList) {
-            when(document) {
+            when (document) {
                 is VideoDocument -> combineList.add(
                     SortedDocument(
                         date = document.datetime,
@@ -76,6 +82,14 @@ class SearchPresenter(
 
     override fun unlike(document: BaseContent.Document) {
         view.unlike(document)
+    }
+
+    override fun addDisposable(disposable: Disposable) {
+        compositeDisposable.add(disposable)
+    }
+
+    override fun dispose() {
+        compositeDisposable.dispose()
     }
 
 }
