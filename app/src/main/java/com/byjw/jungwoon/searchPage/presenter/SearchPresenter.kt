@@ -6,6 +6,10 @@ import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.ImageDocument
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.VideoDocument
 import com.byjw.jungwoon.searchPage.SearchContract
 import com.byjw.jungwoon.util.retrofit.scheme.SortedDocument
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.BiFunction
+import io.reactivex.schedulers.Schedulers
 import java.io.Serializable
 
 class SearchPresenter(
@@ -17,20 +21,28 @@ class SearchPresenter(
         val imageResponse = model.getImageResponseByKeyword(keyword, page)
         val videoResponse = model.getVideoResponseByKeyword(keyword, page)
 
-        if (imageResponse == null || videoResponse == null) {
-            view.toast("네트워크에 문제가 발생하였습니다. 잠시 후 다시 시도해주시기 바랍니다.")
-        } else {
-            if (imageResponse.isEmpty() && videoResponse.isEmpty()) {
-                view.toast("검색하신 키워드에 대한 결과를 찾지 못하였습니다.")
-            } else {
-                val combineList = mutableListOf<SortedDocument>()
-                addCombineList(combineList, imageResponse)
-                addCombineList(combineList, videoResponse)
-                combineList.sortByDescending { it.date }
+        Observable
+            .zip(
+                imageResponse,
+                videoResponse,
+                BiFunction <List<BaseContent.Document>, List<BaseContent.Document>,
+                        MutableList<SortedDocument>> {image, video ->
 
-                view.addSortedList(combineList)
+                    val combineList = mutableListOf<SortedDocument>()
+                    addCombineList(combineList = combineList, documentList = image)
+                    addCombineList(combineList = combineList, documentList = video)
+
+                    combineList.sortByDescending { it.date }
+
+                    return@BiFunction combineList
+                }
+            )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError {
+                Log.e("JW_TEST", "Throwable : $it")
             }
-        }
+            .subscribe(view::addSortedList)
     }
 
     private fun addCombineList(

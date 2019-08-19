@@ -1,15 +1,12 @@
 package com.byjw.jungwoon.searchPage.view
 
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.byjw.jungwoon.util.otto.BusProvider
-import com.byjw.jungwoon.util.otto.event.BusEventAddToFavorite
-import com.byjw.jungwoon.util.otto.event.BusEventRemoveToFavorite
 import com.byjw.jungwoon.BaseContract
 import com.byjw.jungwoon.R
+import com.byjw.jungwoon.util.RxEventBus
 import com.byjw.jungwoon.util.retrofit.scheme.*
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.ImageDocument
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.VideoDocument
@@ -33,10 +30,10 @@ class SearchViewHolder(itemView: View, val view: BaseContract.BaseView) : Recycl
 
             if (document.favorite) {
                 favorite.setImageResource(R.drawable.ic_favorite_fill)
-                BusProvider.post(BusEventAddToFavorite(document))
+                RxEventBus.addFavorite(document)
             } else {
                 favorite.setImageResource(R.drawable.ic_favorite_border)
-                BusProvider.post(BusEventRemoveToFavorite(document))
+                RxEventBus.removeFavorite(document)
             }
         }
 

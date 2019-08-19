@@ -1,7 +1,6 @@
 package com.byjw.jungwoon.searchPage
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.byjw.jungwoon.R
-import com.byjw.jungwoon.util.otto.BusProvider
-import com.byjw.jungwoon.util.otto.event.BusEventSearchKeyword
-import com.byjw.jungwoon.util.otto.event.BusEventUnlikeToSearch
 import com.byjw.jungwoon.searchPage.model.SearchModel
 import com.byjw.jungwoon.searchPage.view.SearchViewAdapter
 import com.byjw.jungwoon.searchPage.presenter.SearchPresenter
-import com.squareup.otto.Subscribe
+import com.byjw.jungwoon.util.RxEventBus
 import kotlinx.android.synthetic.main.fragment_search.view.*
 
 class SearchFragment : Fragment() {
@@ -27,9 +23,16 @@ class SearchFragment : Fragment() {
     var numOfPage = 0
     var searchKeyword = ""
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        BusProvider.register(this)
+
+    override fun onResume() {
+        super.onResume()
+
+        RxEventBus.subjectSearchKeyword.subscribe {
+            searchPresenter.clear()
+            searchPresenter.addSearchResponseByKeyword(keyword = it, page = 1)
+        }
+
+        RxEventBus.subjectUnlikeSearch.subscribe(searchPresenter::unlike)
     }
 
     override fun onCreateView(
@@ -65,25 +68,6 @@ class SearchFragment : Fragment() {
         })
 
         return view
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        BusProvider.unregister(this)
-    }
-
-    @Subscribe
-    fun searchBus(busEventSearchKeyword: BusEventSearchKeyword) {
-        numOfPage = 1
-        searchKeyword = busEventSearchKeyword.keyword
-
-        searchPresenter.clear()
-        searchPresenter.addSearchResponseByKeyword(searchKeyword, numOfPage)
-    }
-
-    @Subscribe
-    fun unlikeBus(busEventUnlikeToSearch: BusEventUnlikeToSearch) {
-        searchPresenter.unlike(busEventUnlikeToSearch.document)
     }
 
 }

@@ -4,10 +4,9 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.byjw.jungwoon.util.otto.BusProvider
 import com.byjw.jungwoon.R
-import com.byjw.jungwoon.util.otto.event.BusEventUnlikeToSearch
 import com.byjw.jungwoon.BaseContract
+import com.byjw.jungwoon.util.RxEventBus
 import com.byjw.jungwoon.util.retrofit.scheme.*
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.ImageDocument
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.VideoDocument
@@ -30,7 +29,7 @@ class FavoriteViewHolder(itemView: View, val view: BaseContract.BaseView) : Recy
 
             if (!document.favorite) {
                 view.removeContents(document)
-                BusProvider.post(BusEventUnlikeToSearch(document))
+                RxEventBus.unlikeSearch(document)
             }
         }
 
