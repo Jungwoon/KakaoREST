@@ -3,7 +3,6 @@ package com.byjw.jungwoon.util.retrofit.base
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.Image
 import com.byjw.jungwoon.util.retrofit.scheme.kakaoApi.Video
 import io.reactivex.Observable
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query

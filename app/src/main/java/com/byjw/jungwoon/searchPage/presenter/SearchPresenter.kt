@@ -42,10 +42,11 @@ class SearchPresenter(
             )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnError { Log.e("JW_TEST", "error : $it") }
                 .subscribe(
-                    { result -> view.addSortedList(result) },
-                    { view.toast("서버 요청에 문제가 발생하였습니다.") }
+                    { result ->
+                        view.addSortedList(result)
+                    },
+                    { Log.e("JW_TEST", "error : $it") }
                 )
         )
 
